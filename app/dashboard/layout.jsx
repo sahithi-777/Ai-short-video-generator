@@ -12,7 +12,7 @@ const DashboardLayout = ({ children }) => {
         <div className="fixed top-0 left-0 right-0 z-20 bg-white">
           <Header />
         </div>
-        <div className="md:ml-64 mt-[65px]">
+        <div className="md:ml-64 mt-[65px] p-10">
           {children}
         </div>
     </div>

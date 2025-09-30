@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { CircleUserRoundIcon, PanelsTopLeftIcon, FileVideo2Icon, ShieldPlusIcon } from 'lucide-react';
+import { CircleUserRoundIcon, PanelsTopLeftIcon, FileVideoIcon, ShieldPlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 const SideNav = () => {
@@ -13,9 +13,9 @@ const SideNav = () => {
         },
         {
             id:2,
-            name:"Creat New",
-            path:"/create-new",
-            icon:FileVideo2Icon
+            name:"Create New",
+            path:"/dashboard/create-new",
+            icon:FileVideoIcon
         },
         {
             id:3,
