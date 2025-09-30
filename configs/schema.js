@@ -1,10 +1,11 @@
-import { boolean } from "drizzle-orm/gel-core";
-import { pgTable } from "drizzle-orm/pg-core";
+// ...existing code...
+import { pgTable, serial, varchar, boolean } from "drizzle-orm/pg-core";
 
-export const Users = pgTable('users',{
-    id: pgTable.serial('id').primaryKey(),
-    name: varchar('name').notNull(),
-    email: varchar('email').notNull().unique(),
-    imageUrl: varchar('image_url'),
-    subscription:boolean('subscription').default(false),
+export const Users = pgTable("users", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", 255).notNull(),
+    email: varchar("email", 255).notNull().unique(),
+    imageUrl: varchar("image_url", 1024),
+    subscription: boolean("subscription").default(false),
 });
+// ...existing code...
