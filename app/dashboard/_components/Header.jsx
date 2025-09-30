@@ -8,14 +8,11 @@ const Header = () => {
 return (
     <div className='p-3 px-5 flex items-center justify-between shadow-md'>
             <div className='flex gap-3 items-center'>
-                    <Image src={'/logo.png'} alt='Logo' width={100} height={100}/>
-                    <h2 className='bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent text-2xl font-bold'>AI Short Video Generator</h2>
+                    <Image src={'/logo.png'} alt='Logo' width={30} height={30} className='rounded-full'/>
+                    <h2 className='bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent text-xl font-bold'>Smart Shorts</h2>
             </div>
             <div className='flex gap-3 items-center'>
-                <Button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Get Started
-                </Button>
-               <Button>Dashboard</Button>
+               <Button className='bg-fuchsia-700 text-white hover:bg-fuchsia-400'>Dashboard</Button>
                 <UserButton/>
             </div>
     </div>
