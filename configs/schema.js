@@ -8,4 +8,6 @@ export const Users = pgTable("users", {
     imageUrl: varchar("image_url", 1024),
     subscription: boolean("subscription").default(false),
 });
+
+
 // ...existing code...

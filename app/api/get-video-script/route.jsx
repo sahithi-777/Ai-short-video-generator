@@ -19,7 +19,7 @@ export async function POST(req) {
     const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-2.5-flash',
     });
 
     const chatSession = model.startChat({
@@ -54,13 +54,66 @@ export async function POST(req) {
     const responseText = result.response.text();
     console.log('AI Response:', responseText);
 
-    // Remove markdown code blocks if present
-    let cleanedResponse = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    // Remove markdown code blocks and extra whitespace
+    let cleanedResponse = responseText
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim();
+    
+    // Add additional sanitization for JSON
+    // Remove extra whitespace and newlines
+    cleanedResponse = cleanedResponse
+      .replace(/\\n/g, ' ')
+      .replace(/\\t/g, ' ')
+      .trim();
+    
+    // Fix unescaped quotes within JSON strings
+    // This function iterates through the response and escapes quotes within JSON string values
+    function fixUnescapedQuotes(str) {
+      let result = '';
+      let inString = false;
+      let lastChar = '';
+      
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        
+        if (char === '"' && lastChar !== '\\') {
+          // This is an unescaped quote
+          if (inString) {
+            // This is a closing quote
+            inString = false;
+          } else {
+            // This is an opening quote
+            inString = true;
+          }
+          result += char;
+        } else if (inString && char === '"' && lastChar === '\\') {
+          // This is an escaped quote within a string, just add it
+          result += char;
+        } else if (inString && char === '"') {
+          // This is an unescaped quote within a string value, escape it
+          result += '\\"';
+        } else {
+          // Just add the character
+          result += char;
+        }
+        
+        lastChar = char;
+      }
+      
+      return result;
+    }
+    
+    // Apply the quote fixing function
+    cleanedResponse = fixUnescapedQuotes(cleanedResponse);
+    // Log cleaned response for debugging
+    console.log('Cleaned Response:', cleanedResponse);
     
     // Try to parse the JSON
     let parsedResult;
     try {
       parsedResult = JSON.parse(cleanedResponse);
+      console.log('Parsed Result:', parsedResult); // Log parsed JSON
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
       console.error('Response text:', cleanedResponse);
@@ -70,6 +123,25 @@ export async function POST(req) {
       }, { status: 500 });
     }
     
+    // Validate that we have a proper script structure
+    if (!parsedResult || !parsedResult.scenes || !Array.isArray(parsedResult.scenes) || parsedResult.scenes.length === 0) {
+      console.error('Invalid video script format received:', parsedResult);
+      return NextResponse.json(
+        { error: "Invalid video script format received" },
+        { status: 500 }
+      );
+    }
+    
+    // Additional validation for each scene
+    for (const scene of parsedResult.scenes) {
+      if (!scene.imagePrompt || !scene.contextText) {
+        console.error('Invalid scene format:', scene);
+        return NextResponse.json(
+          { error: "Invalid scene format in video script" },
+          { status: 500 }
+        );
+      }
+    }
     return NextResponse.json({ 'result': parsedResult });
   } catch (e) {
     console.error('API Error:', e);

@@ -15,7 +15,7 @@ const config = {
 };
 
 const model = ai.getGenerativeModel({
-  model: 'gemini-2.5-flash-image-preview',
+  model: 'gemini-2.5-flash',
   generationConfig: config,
 });
 
