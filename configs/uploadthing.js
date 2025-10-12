@@ -25,4 +25,15 @@ export const ourFileRouter = {
       console.log("✅ Video uploaded successfully:", file.url);
       return { url: file.url };
     }),
+
+  imageUploader: f({ 
+    image: { 
+      maxFileSize: "4MB",
+      maxFileCount: 10 
+    } 
+  })
+    .onUploadComplete(async ({ file }) => {
+      console.log("✅ Image uploaded successfully:", file.url);
+      return { url: file.url };
+    }),
 };

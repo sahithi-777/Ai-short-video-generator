@@ -1,5 +1,4 @@
-// ...existing code...
-import { pgTable, serial, varchar, boolean } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, boolean, json, timestamp } from "drizzle-orm/pg-core";
 
 export const Users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -9,5 +8,12 @@ export const Users = pgTable("users", {
     subscription: boolean("subscription").default(false),
 });
 
-
-// ...existing code...
+export const VideoData = pgTable("videoData", {
+    id: serial('id').primaryKey(),
+    script: json('script').notNull(),
+    audioFileUrl: varchar('audioFileUrl', 1024).notNull(),
+    captions: json('captions').notNull(),
+    imageList: varchar('imageList', 1024).array(), // ← KEEP THIS AS IS
+    createdBy: varchar('createdBy', 255).notNull(),
+    createdAt: timestamp('createdAt').defaultNow()
+});
