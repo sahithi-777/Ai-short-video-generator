@@ -25,7 +25,6 @@ export async function POST(req) {
       return NextResponse.json({ Error: 'Creator email is required' }, { status: 400 });
     }
 
-    // ✅ Normalize captions to array
     let captionData = [];
     if (Array.isArray(captions)) {
       captionData = captions;
